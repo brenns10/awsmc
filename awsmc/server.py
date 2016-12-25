@@ -164,6 +164,10 @@ class Ec2Server:
         remote = os.path.join('/home/ubuntu/minecraft',
                               os.path.basename(server_jar))
         self.put(server_jar, remote)
+        print('Running server for first time...')
+        self.run('cd {}; {}'.format(DIR, CMD))
+        print('Accepting the eula...')
+        self.run('sed -i s/false/true/ /home/ubuntu/minecraft/eula.txt')
 
     def wait_until_ready(self):
         print('Waiting until the instance is running...')
@@ -209,9 +213,11 @@ class Ec2Server:
             output = channel.recv(4096)
         return total.getvalue()
 
-    def run(self, command, shell=False):
+    def run(self, command, pty=False, shell=False):
         channel = self.client.get_transport().open_session()
         channel.set_combine_stderr(True)
+        if pty:
+            channel.get_pty()
         if shell:
             channel.invoke_shell()
             channel.sendall(command + '\n')
@@ -337,4 +343,4 @@ class StartCommand(BaseCommand):
 
     def execute(self, args):
         server = Ec2Server(name=args.name)
-        print(server.run('awsmc server_start').decode('ascii'))
+        print(server.run('awsmc server_start', pty=True).decode('ascii'))
