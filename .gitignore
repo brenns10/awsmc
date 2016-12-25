@@ -1,2 +1,4 @@
 __pycache__
 venv
+awsmc.egg-info
+dist

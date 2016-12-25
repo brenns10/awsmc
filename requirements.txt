@@ -1,0 +1,6 @@
+paramiko
+boto3
+requests
+screenutils
+setuptools
+twine
