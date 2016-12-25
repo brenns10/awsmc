@@ -4,7 +4,7 @@ long_description = open('README.rst').read()
 
 setup(
     name='awsmc',
-    version='0.0.1',
+    version='0.0.2',
     description='Simple and cheap minecraft hosting on AWS',
     long_description=long_description,
     install_requires=['paramiko', 'requests', 'screenutils', 'boto3'],
@@ -15,7 +15,7 @@ setup(
     py_modules=['awsmc'],
     entry_points={
         'console_scripts': [
-            'awsmc = awsmc.__main__.main',
+            'awsmc = awsmc.__main__:main',
         ],
     },
     classifiers=[
