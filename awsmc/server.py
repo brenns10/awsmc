@@ -285,7 +285,7 @@ def list_players():
 
 def shutdown_if_empty():
     players = list_players()
-    if re.search('0/', players):
+    if re.search(r'\b0/', players):  # if there are 0 players
         s = _get_screen()
         s.send_commands('stop')
         time.sleep(10) # give it time to save and exit
@@ -344,7 +344,7 @@ class ServerRegisterCron(BaseCommand):
     def execute(self, args):
         cron = CronTab(user=True)
         job = cron.new(command='awsmc server_shutdown_if_empty')
-        job.minute.every(5)
+        job.every.hour()
         job.enable()
         cron.write()
 
