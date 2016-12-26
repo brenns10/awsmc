@@ -150,6 +150,8 @@ class Ec2Server:
 
     def initialize(self, server_jar):
         self.wait_until_ready()
+        self.instance.reload()
+        print('ABOUT TO CONNECT TO SSH AT ' + self.hostname)
         print('Updating package databases...')
         self.run('sudo apt update')
         print('Upgrading packages...')
