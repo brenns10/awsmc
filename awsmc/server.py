@@ -5,6 +5,7 @@ awsmc.server - server side commands
 import io
 import os.path
 import multiprocessing.pool
+import subprocess
 import time
 
 import boto3
@@ -20,6 +21,8 @@ DIR = '/home/ubuntu/minecraft'
 NAME = 'server'
 CMD = 'java -Xms512M -Xmx1G -XX:+UseConcMarkSweepGC -jar spigot-1.11.2.jar'
 _EC2 = None
+IDENTITY = '/home/stephen/.ssh/ctf.pem'
+USERNAME = 'ubuntu'
 
 
 def EC2():
@@ -346,3 +349,40 @@ class StartCommand(BaseCommand):
     def execute(self, args):
         server = Ec2Server(name=args.name)
         print(server.run('awsmc server_start', pty=True).decode('ascii'))
+
+
+@register_command
+class ScreenCommand(BaseCommand):
+
+    def name(self):
+        return 'screen'
+
+    def arguments(self, parser):
+        parser.add_argument('name', type=str, help='name of the server')
+
+    def execute(self, args):
+        server = Ec2Server(name=args.name)
+        os.system('ssh -t -i {identity} {username}@{hostname} \'{command}\''.format(
+            identity=IDENTITY,
+            username=USERNAME,
+            hostname=server.hostname,
+            command='screen -r',
+        ))
+
+
+@register_command
+class SshCommand(BaseCommand):
+
+    def name(self):
+        return 'ssh'
+
+    def arguments(self, parser):
+        parser.add_argument('name', type=str, help='name of the server')
+
+    def execute(self, args):
+        server = Ec2Server(name=args.name)
+        os.system('ssh -t -i {identity} {username}@{hostname}'.format(
+            identity=IDENTITY,
+            username=USERNAME,
+            hostname=server.hostname,
+        ))
