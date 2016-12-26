@@ -284,7 +284,7 @@ def list_players():
 
 
 def shutdown_if_empty():
-    players = list_players().decode('utf8')
+    players = list_players()
     if re.search('0/', players):
         s = _get_screen()
         s.send_commands('stop')
