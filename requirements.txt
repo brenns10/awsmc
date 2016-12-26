@@ -2,6 +2,6 @@ paramiko
 boto3
 requests
 screenutils
-crontab
+python-crontab
 setuptools
 twine
