@@ -2,5 +2,6 @@ paramiko
 boto3
 requests
 screenutils
+crontab
 setuptools
 twine

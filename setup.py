@@ -4,10 +4,10 @@ long_description = open('README.rst').read()
 
 setup(
     name='awsmc',
-    version='0.0.4',
+    version='0.0.5',
     description='Simple and cheap minecraft hosting on AWS',
     long_description=long_description,
-    install_requires=['paramiko', 'requests', 'screenutils', 'boto3'],
+    install_requires=['paramiko', 'requests', 'screenutils', 'boto3', 'crontab'],
     url='https://github.com/brenns10/awsmc',
     author='Stephen Brennan',
     author_email='stephen@brennan.io',
