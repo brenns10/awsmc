@@ -343,8 +343,9 @@ class ServerRegisterCron(BaseCommand):
 
     def execute(self, args):
         cron = CronTab(user=True)
+        cron.remove_all('awsmc server_shutdown_if_empty')
         job = cron.new(command='awsmc server_shutdown_if_empty')
-        job.every.hour()
+        job.every().hour()
         job.enable()
         cron.write()
 
