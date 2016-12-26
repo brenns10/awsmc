@@ -4,7 +4,7 @@ long_description = open('README.rst').read()
 
 setup(
     name='awsmc',
-    version='0.0.9',
+    version='0.0.10',
     description='Simple and cheap minecraft hosting on AWS',
     long_description=long_description,
     install_requires=[
