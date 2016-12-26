@@ -5,12 +5,14 @@ awsmc.server - server side commands
 import io
 import os.path
 import multiprocessing.pool
+import re
 import subprocess
 import time
 
 import boto3
 import paramiko
 import screenutils
+from crontab import CronTab
 
 from awsmc.spigot import get_spigot, have_spigot
 from awsmc.cli import register_command
@@ -281,6 +283,15 @@ def list_players():
     return _get_output(_get_existing_screen(), 'list')
 
 
+def shutdown_if_empty():
+    players = list_players().decode('utf8')
+    if re.search('0/', players):
+        s = _get_screen()
+        s.send_commands('stop')
+        time.sleep(10) # give it time to save and exit
+        os.system('sudo shutdown -h now')
+
+
 @register_command
 class ServerStartCommand(BaseCommand):
 
@@ -299,7 +310,6 @@ class ServerListCommand(BaseCommand):
 
     def execute(self, args):
         print(list_players())
-        print('hi')
 
 
 @register_command
@@ -313,6 +323,30 @@ class ServerSayCommand(BaseCommand):
 
     def execute(self, args):
         say(args.message)
+
+
+@register_command
+class ServerShutdownIfEmptyCommand(BaseCommand):
+
+    def name(self):
+        return 'server_shutdown_if_empty'
+
+    def execute(self, args):
+        shutdown_if_empty()
+
+
+@register_command
+class ServerRegisterCron(BaseCommand):
+
+    def name(self):
+        return 'server_register_cron'
+
+    def execute(self, args):
+        cron = CronTab(user=True)
+        job = cron.new(command='awsmc server_shutdown_if_empty')
+        job.minute.every(5)
+        job.enable()
+        cron.write()
 
 
 @register_command
